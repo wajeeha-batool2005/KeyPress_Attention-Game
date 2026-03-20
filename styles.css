@@ -1,0 +1,74 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #F9DFDF;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#home-screen {
+  background-color: white;
+  padding: 60px 40px 60px 40px;
+  border-radius: 30px;
+}
+
+#instruction-list {
+  line-height: 1.5;
+  text-align: left;
+}
+
+.screen {
+  background-color: white;
+  padding: 60px;
+  border-radius: 30px;
+  display: none;
+  text-align: center;
+}
+
+.screen.active {
+  display: block;
+}
+
+h1 {
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 15px;
+  background-color: #F5AFAF;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px;
+}
+
+#game-box {
+  width: 200px;
+  height: 200px;
+  margin: 30px auto;
+  border: 3px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80px;
+  background: #ebbebe;
+  border-radius: 20px;
+}
+
+#game-info {
+  margin-top: 20px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.quit-btn {
+  margin-top: 20px;
+  background-color: #ff4c4c;
+  color: white;
+  border: none;
+  border-radius: 15px;
+}
