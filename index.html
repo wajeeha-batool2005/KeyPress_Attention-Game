@@ -2,50 +2,77 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keypress + Attention Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keypress + Attention Lab</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-    <!-- Home Screen -->
-    <div id="home-screen" class="screen active">
-        <h1>Keypress + Attention</h1>
-        <p>Instructions:</p>
-        <ul id="instruction-list">
-            <li>Press 'A' when a letter (A-Z) appears.</li>
-            <li>Press 'L' when a number (0-9) appears.</li>
-            <li>The game ends after 20 random letters/numbers.</li>
-        </ul>
-        <button id="new-game-btn">New Game</button>
-    </div>
 
-    <!-- Game Screen -->
-    <div id="game-screen" class="screen">
+<!-- MAIN SCREEN -->
+<div id="main-screen" class="screen active">
+
+    <div class="card">
+
+        <h1>Keypress + Attention</h1>
+
+        <p class="instructions">
+            Press <b>A</b> for Letter (A-Z) &nbsp; | &nbsp;
+            Press <b>L</b> for Number (0-9)
+        </p>
+
+        <!-- DISPLAY BOX -->
         <div id="game-box">
             <span id="char-display">?</span>
         </div>
 
-        <div id="game-info">
-            <!-- Correct, Wrong, Time will appear here -->
+        <!-- STATS ROW -->
+        <div class="stats">
+            <div class="stat-box">
+                <h3 id="time">0.00s</h3>
+                <p>Keypress Time</p>
+            </div>
+
+            <div class="stat-box">
+                <h3 id="correct">0</h3>
+                <p>Correct Moves</p>
+            </div>
+
+            <div class="stat-box">
+                <h3 id="wrong">0</h3>
+                <p>Wrong Moves</p>
+            </div>
         </div>
 
-        <button id="quit-btn" class="quit-btn">Quit Game</button>
-    </div>
+        <!-- BUTTONS -->
+        <div class="buttons">
+            <button id="start-btn">Start</button>
+            <button id="quit-btn">Quit</button>
+        </div>
 
-    <!-- Result Screen -->
-    <div id="result-screen" class="screen">
+    </div>
+</div>
+
+
+<!-- RESULT SCREEN -->
+<div id="result-screen" class="screen">
+
+    <div class="card">
         <h1>Game Result</h1>
-        <p>Correct Moves: <span id="result-correct"></span></p>
-        <p>Wrong Moves: <span id="result-wrong"></span></p>
-        <p>Total Time: <span id="result-time"></span> s</p>
-        <p>Average Time per Keypress: <span id="result-avg"></span> s</p>
-        <button id="home-btn">Home</button>
-        <button id="retry-btn">Retry</button>
+
+        <div class="result-box">
+            <p>Correct Moves: <span id="r-correct"></span></p>
+            <p>Wrong Moves: <span id="r-wrong"></span></p>
+            <p>Total Time: <span id="r-time"></span> s</p>
+            <p>Average Time: <span id="r-avg"></span> s</p>
+        </div>
+
+        <button id="ok-btn">OK</button>
     </div>
 
-    <script src="script.js"></script>
-</body>
+</div>
 
+<script src="script.js"></script>
+</body>
 </html>

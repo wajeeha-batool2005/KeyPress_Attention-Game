@@ -1,112 +1,137 @@
-// Elements
-const homeScreen = document.getElementById('home-screen');
-const gameScreen = document.getElementById('game-screen');
-const resultScreen = document.getElementById('result-screen');
-const newGameBtn = document.getElementById('new-game-btn');
-const quitBtn = document.getElementById('quit-btn');
-const homeBtn = document.getElementById('home-btn');
-const retryBtn = document.getElementById('retry-btn');
-const charDisplay = document.getElementById('char-display');
-const gameInfo = document.getElementById('game-info');
+const mainScreen = document.getElementById("main-screen");
+const resultScreen = document.getElementById("result-screen");
 
-const resultCorrect = document.getElementById('result-correct');
-const resultWrong = document.getElementById('result-wrong');
-const resultTime = document.getElementById('result-time');
-const resultAvg = document.getElementById('result-avg');
+const charDisplay = document.getElementById("char-display");
+
+const timeEl = document.getElementById("time");
+const correctEl = document.getElementById("correct");
+const wrongEl = document.getElementById("wrong");
+
+const startBtn = document.getElementById("start-btn");
+const quitBtn = document.getElementById("quit-btn");
+const okBtn = document.getElementById("ok-btn");
+
+const rCorrect = document.getElementById("r-correct");
+const rWrong = document.getElementById("r-wrong");
+const rTime = document.getElementById("r-time");
+const rAvg = document.getElementById("r-avg");
 
 let sequence = [];
-let currentIndex = 0;
+let index = 0;
+
 let correct = 0;
 let wrong = 0;
+
 let startTime = 0;
-let keypressTimes = [];
+let times = [];
+let running = false;
 
-// Generate 20 random letters/numbers
-function generateSequence() {
-  sequence = [];
-  for (let i = 0; i < 20; i++) {
-    if (Math.random() < 0.5) {
-      sequence.push(String.fromCharCode(65 + Math.floor(Math.random() * 26))); // letters A-Z
-    } else {
-      sequence.push(Math.floor(Math.random() * 10).toString()); // numbers 0-9
+/* GENERATE */
+function generate() {
+    sequence = [];
+    for (let i = 0; i < 20; i++) {
+        if (Math.random() < 0.5) {
+            sequence.push(String.fromCharCode(65 + Math.floor(Math.random() * 26)));
+        } else {
+            sequence.push(Math.floor(Math.random() * 10).toString());
+        }
     }
-  }
 }
 
-// Show character and start timer
-function showChar() {
-  if (currentIndex < sequence.length) {
-    charDisplay.textContent = sequence[currentIndex];
+/* SHOW CHAR */
+function show() {
+    if (index >= sequence.length) {
+        endGame();
+        return;
+    }
+
+    charDisplay.textContent = sequence[index];
     startTime = performance.now();
-  } else {
-    endGame();
-  }
 }
 
-// Start game
-function startGame() {
-  homeScreen.classList.remove('active');
-  resultScreen.classList.remove('active');
-  gameScreen.classList.add('active');
+/* START */
+startBtn.onclick = () => {
+    generate();
+    index = 0;
+    correct = 0;
+    wrong = 0;
+    times = [];
+    running = true;
 
-  correct = 0;
-  wrong = 0;
-  currentIndex = 0;
-  keypressTimes = [];
+    updateUI();
+    show();
+};
 
-  gameInfo.innerHTML = '';
-  generateSequence();
-  showChar();
-}
+/* KEY PRESS */
+document.addEventListener("keydown", (e) => {
+    if (!running) return;
 
-// Handle keypress
-document.addEventListener('keydown', (e) => {
-  if (!gameScreen.classList.contains('active')) return;
+    const current = sequence[index];
+    const elapsed = (performance.now() - startTime) / 1000;
 
-  const currentChar = sequence[currentIndex];
-  const elapsed = ((performance.now() - startTime) / 1000).toFixed(2); // time for this keypress
+    const expected = /^[A-Z]$/.test(current) ? "a" : "l";
 
-  const correctKey = /^[A-Z]$/.test(currentChar) ? 'a' : 'l';
+    if (e.key.toLowerCase() === expected) correct++;
+    else wrong++;
 
-  if (e.key.toLowerCase() === correctKey) {
-    correct++;
-  } else {
-    wrong++;
-  }
+    times.push(elapsed);
 
-  keypressTimes.push(parseFloat(elapsed));
+    index++;
 
-  // Show per-keypress info, centered, line by line
-  gameInfo.innerHTML = `
-    <p>Correct Moves: ${correct}</p>
-    <p>Wrong Moves: ${wrong}</p>
-    <p>Keypress Time: ${elapsed} s</p>
-  `;
-
-  currentIndex++;
-  showChar();
+    updateUI();
+    show();
 });
 
-// End game
+/* UI UPDATE */
+function updateUI() {
+    correctEl.textContent = correct;
+    wrongEl.textContent = wrong;
+
+    const last = times[times.length - 1] || 0;
+    timeEl.textContent = last.toFixed(2) + "s";
+}
+
+/* END */
 function endGame() {
-  gameScreen.classList.remove('active');
-  resultScreen.classList.add('active');
+    running = false;
 
-  const totalTime = keypressTimes.reduce((a, b) => a + b, 0);
-  const avgTime = (totalTime / keypressTimes.length).toFixed(2);
+    mainScreen.classList.remove("active");
+    resultScreen.classList.add("active");
 
-  resultCorrect.textContent = correct;
-  resultWrong.textContent = wrong;
-  resultTime.textContent = totalTime.toFixed(2);
-  resultAvg.textContent = avgTime;
+    const total = times.reduce((a,b) => a + b, 0);
+    const avg = total / times.length;
+
+    rCorrect.textContent = correct;
+    rWrong.textContent = wrong;
+    rTime.textContent = total.toFixed(2);
+    rAvg.textContent = avg.toFixed(2);
 }
 
-// Button events
-newGameBtn.addEventListener('click', startGame);
-quitBtn.addEventListener('click', endGame);
-homeBtn.addEventListener('click', () => {
-  resultScreen.classList.remove('active');
-  gameScreen.classList.remove('active');
-  homeScreen.classList.add('active');
-});
-retryBtn.addEventListener('click', startGame);
+function resetGame() {
+    sequence = [];
+    index = 0;
+    correct = 0;
+    wrong = 0;
+    startTime = 0;
+    times = [];
+    running = false;
+
+    charDisplay.textContent = "?";
+
+    correctEl.textContent = "0";
+    wrongEl.textContent = "0";
+    timeEl.textContent = "0.00s";
+}
+
+/* QUIT */
+quitBtn.onclick = () => {
+    endGame();
+    resetGame();
+};
+
+/* OK BACK */
+okBtn.onclick = () => {
+    resultScreen.classList.remove("active");
+    mainScreen.classList.add("active");
+    resetGame();
+};
